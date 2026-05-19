@@ -7,14 +7,14 @@ export const metadata = {
     'Portfolio pribadi Muhammad Ahnaf Isa Hammam Lisualla. Software Engineer & UI/UX Designer yang berfokus pada pengembangan web modern dan interaktif.',
   keywords: ['software engineer', 'ui/ux designer', 'web developer', 'next.js', 'react'],
   authors: [{ name: 'Muhammad Ahnaf Isa Hammam Lisualla' }],
-openGraph: {
+  openGraph: {
     title: 'Ahnaf Isa — Software Engineer',
     description: 'Lihat karya dan proyek pengembangan web modern saya.',
-    url: 'https://ahnaf-portfolio.vercel.app', // Ganti dengan domain Vercel Anda nanti
+    url: 'https://porto-ahnaf-v1.vercel.app/', // Ganti dengan domain Vercel Anda nanti
     siteName: 'Ahnaf Portfolio',
     images: [
       {
-        url: '/og-image.jpg', // Masukkan screenshot web Anda ke folder 'public' dan beri nama og-image.jpg
+        url: '/og-image.png', // Masukkan screenshot web Anda ke folder 'public' dan beri nama og-image.jpg
         width: 1200,
         height: 630,
         alt: 'Portfolio Preview',
