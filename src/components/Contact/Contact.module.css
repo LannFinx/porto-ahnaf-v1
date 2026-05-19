@@ -1,0 +1,188 @@
+/* components/Contact/Contact.module.css */
+
+.footer {
+  padding: var(--section-padding) 0 var(--space-8) 0;
+  /* Transparan agar tembus canvas bintang-bintang dari GlobalBackground */
+  background: transparent; 
+  border-top: 1px solid var(--color-border-subtle);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Cahaya Ambient Halus */
+.footer::before {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 50%;
+  background: radial-gradient(ellipse at center, rgba(200, 169, 110, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-8);
+  position: relative;
+  z-index: 1;
+}
+
+.ctaWrapper {
+  text-align: center;
+  margin-bottom: var(--space-32);
+}
+
+.topInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-8);
+}
+
+.subheading {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-gold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ── Live Time Widget ── */
+.localTime {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.03);
+  padding: var(--space-1) var(--space-3);
+  border-radius: 100px;
+  border: 1px solid var(--color-border-subtle);
+}
+
+.pulseDot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-green);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(109, 191, 138, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(109, 191, 138, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(109, 191, 138, 0); }
+}
+
+/* ── Big CTA Button (Text Morphing) ── */
+.bigEmailBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer; /* Diganti pointer agar sadar bisa diklik */
+  display: inline-block;
+}
+
+.defaultText, .copiedText {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: 300;
+  line-height: 1;
+  transition: color var(--transition-base), transform var(--transition-base);
+  /* Animasi mulus saat pergantian teks */
+  animation: fadeInText 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInText {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.defaultText {
+  color: var(--color-text-primary);
+}
+
+.copiedText {
+  color: var(--color-green);
+  font-style: italic;
+  font-size: clamp(3rem, 8vw, 8rem); /* Sedikit disesuaikan agar tidak terlalu memakan layar saat panjang */
+}
+
+.italicAksent {
+  color: var(--color-text-muted);
+  font-style: italic;
+  transition: color var(--transition-base);
+}
+
+.bigEmailBtn:hover .defaultText {
+  color: var(--color-gold);
+}
+
+.bigEmailBtn:hover .italicAksent {
+  color: var(--color-gold-dim);
+}
+
+/* ── Bottom Bar & Magnetic Socials ── */
+.bottomBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.copyright {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+}
+
+.socials {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.socialLink {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  /* Transisi khusus membal/spring untuk efek magnet */
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color var(--transition-fast);
+  padding: var(--space-2);
+  margin: calc(var(--space-2) * -1); /* Menjaga area klik tetap besar tanpa merusak layout */
+}
+
+.socialLink:hover {
+  color: var(--color-gold);
+}
+
+@media (max-width: 768px) {
+  .ctaWrapper {
+    margin-bottom: var(--space-16);
+  }
+  .defaultText {
+    font-size: clamp(3rem, 12vw, 5rem);
+  }
+  .bottomBar {
+    flex-direction: column-reverse;
+    gap: var(--space-8);
+    text-align: center;
+  }
+  .socials {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

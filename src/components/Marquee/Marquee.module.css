@@ -1,0 +1,29 @@
+.marqueeContainer {
+  width: 100vw;
+  overflow: hidden;
+  padding: var(--space-8) 0;
+  background: var(--color-surface); /* Beri background agar memisahkan section */
+  border-top: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  white-space: nowrap;
+}
+
+.marqueeText {
+  display: flex;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 6rem); /* Teks Raksasa */
+  font-weight: 300;
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  /* Stroke effect ala editorial */
+  -webkit-text-stroke: 1px var(--color-border);
+  color: transparent;
+  transition: color 0.4s ease;
+  will-change: transform;
+}
+
+.marqueeText:hover {
+  color: var(--color-gold);
+  -webkit-text-stroke: 0px transparent;
+}

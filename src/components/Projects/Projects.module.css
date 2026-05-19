@@ -1,0 +1,164 @@
+/* components/Projects/Projects.module.css */
+
+.projects {
+  padding: var(--section-padding) 0;
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border-subtle);
+  position: relative; /* Penting untuk konteks z-index jika diperlukan */
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-8);
+}
+
+/* ── Section Label ── */
+.sectionLabel {
+  display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-12);
+}
+.labelNum { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-gold); letter-spacing: 0.15em; }
+.labelText { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); letter-spacing: 0.2em; text-transform: uppercase; }
+.sectionLabel::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to right, var(--color-border), transparent); }
+
+/* ── Filter Kategori ── */
+.filterContainer {
+  display: flex; flex-wrap: wrap; gap: var(--space-6); margin-bottom: var(--space-12);
+  border-bottom: 1px solid var(--color-border-subtle); padding-bottom: var(--space-4);
+}
+.filterBtn {
+  background: none; border: none; color: var(--color-text-muted); font-family: var(--font-mono);
+  font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.1em;
+  cursor: none; /* Sembunyikan kursor agar custom cursor terlihat */
+  padding: var(--space-2) 0; position: relative; transition: color var(--transition-base);
+}
+.filterBtn::after {
+  content: ""; position: absolute; bottom: -17px; left: 0; width: 100%; height: 1px;
+  background: var(--color-gold); transform: scaleX(0); transform-origin: right; transition: transform var(--transition-base);
+}
+.filterBtn:hover { color: var(--color-text-primary); }
+.activeFilter { color: var(--color-gold); }
+.activeFilter::after { transform: scaleX(1); transform-origin: left; }
+
+/* ── Project Grid & Cards ── */
+.grid {
+  display: flex; flex-direction: column; gap: var(--space-6);
+}
+.card {
+  position: relative; background: var(--color-surface); padding: var(--space-12);
+  border: 1px solid var(--color-border-subtle); border-radius: var(--radius-lg);
+  cursor: none; /* Sembunyikan kursor agar custom cursor terlihat */
+  overflow: hidden; animation: fadeIn 0.5s ease;
+  transition: transform var(--transition-base), background var(--transition-base), border-color var(--transition-base);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.card:hover {
+  background: var(--color-surface-2); border-color: var(--color-border); transform: translateY(-4px);
+}
+
+.cardHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6); }
+.category { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-gold); letter-spacing: 0.1em; text-transform: uppercase; }
+.tech { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); }
+
+.title {
+  font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 300;
+  color: var(--color-text-primary); margin-bottom: var(--space-4); display: flex; align-items: center; gap: var(--space-4);
+}
+.titleLink { display: flex; align-items: center; gap: var(--space-4); color: var(--color-text-primary); text-decoration: none; transition: color var(--transition-base); width: fit-content; }
+.titleLink:hover { color: var(--color-gold); }
+.titleNoLink { display: flex; align-items: center; gap: var(--space-4); color: var(--color-text-primary); }
+
+.arrow { font-family: var(--font-body); font-size: var(--text-xl); color: var(--color-text-muted); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), color var(--transition-base); }
+.card:hover .arrow { transform: translate(4px, -4px); color: var(--color-gold); }
+.arrowClicked { transform: rotate(45deg) scale(1.2) !important; color: var(--color-gold) !important; }
+
+.desc { font-size: var(--text-md); color: var(--color-text-secondary); line-height: 1.6; max-width: 80%; }
+
+.accentLine {
+  position: absolute; bottom: 0; left: 0; height: 2px; width: 100%;
+  background: var(--color-gold); transform: scaleX(0); transform-origin: right; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card:hover .accentLine { transform: scaleX(1); transform-origin: left; }
+
+/* ====================================================== */
+/* ── KODE BARU: CURSOR-ATTACHED IMAGE & MOBILE IMAGE ──  */
+/* ====================================================== */
+
+/* Container mengambang (hanya desktop) */
+.floatingImageContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 220px;
+  /* Geser tengah kontainer tepat di titik kursor mouse */
+  transform: translate(-50%, -50%);
+  pointer-events: none; /* Jangan memblokir klik mouse */
+  z-index: 100;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  
+  /* Logika Sembunyi/Tampil */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.showImage {
+  opacity: 1;
+  visibility: visible;
+}
+
+.floatingImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Sedikit efek filter sinematik */
+  filter: grayscale(40%) brightness(0.9);
+  transition: filter 0.4s ease;
+}
+
+.showImage .floatingImg {
+  filter: grayscale(0%) brightness(1);
+}
+
+/* Gambar statis disembunyikan di Desktop */
+.mobileImage {
+  display: none;
+}
+
+/* ── Responsive & Touch Screens ── */
+/* Jika perangkat menggunakan layar sentuh (HP/Tablet) */
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+  /* Matikan total efek gambar mengambang */
+  .floatingImageContainer {
+    display: none !important;
+  }
+  
+  .card {
+    padding: var(--space-8);
+    position: relative;
+  }
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  .desc {
+    max-width: 100%;
+  }
+
+  /* Munculkan gambar statis di dalam kartu */
+  .mobileImage {
+    display: block;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    margin-top: var(--space-6);
+  }
+}

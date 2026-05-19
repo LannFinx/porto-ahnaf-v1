@@ -1,0 +1,271 @@
+/* components/Navbar/Navbar.module.css */
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: var(--space-4) 0;
+  /* Transisi posisi untuk Auto-Hide */
+  transform: translateY(0);
+  transition: background var(--transition-base), 
+              border-color var(--transition-base),
+              padding var(--transition-base),
+              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid transparent;
+}
+
+/* State saat di-scroll (Transparan Blur) */
+.header.scrolled {
+  background: rgba(8, 8, 8, 0.7); /* Lebih transparan agar lebih modern */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+  padding: var(--space-3) 0;
+}
+
+/* State Auto-Hide (Sembunyi ke atas) */
+.header.hidden {
+  transform: translateY(-100%);
+}
+
+/* ── Scroll Progress Bar ── */
+.progressBarWrapper {
+  position: absolute;
+  bottom: -1px; /* Tepat di bawah border navbar */
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: transparent;
+  z-index: 101;
+}
+
+.progressBar {
+  height: 100%;
+  background: var(--color-gold);
+  /* Tidak perlu transisi width karena di-update konstan oleh scroll event */
+  will-change: width; 
+}
+
+.nav {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-8);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+/* ── Logo ── */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  text-decoration: none;
+  margin-right: auto;
+  cursor: none;
+}
+
+.logoMark {
+  width: 32px;
+  height: 32px;
+  background: var(--color-gold);
+  color: var(--color-bg);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: transform var(--transition-fast);
+}
+
+.logo:hover .logoMark {
+  transform: rotate(8deg) scale(1.05);
+}
+
+.logoText {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  letter-spacing: 0.03em;
+  cursor: none;
+}
+
+/* ── Nav Links ── */
+.navLinks {
+  display: flex;
+  list-style: none;
+  gap: var(--space-6);
+}
+
+.navLink {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  position: relative;
+  padding-bottom: 2px;
+  transition: color var(--transition-fast);
+  cursor: none;
+}
+
+/* Garis bawah animasi hover */
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-gold);
+  transition: width var(--transition-base);
+}
+
+.navLink:hover {
+  color: var(--color-text-primary);
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+/* Spy Scroll: State Aktif */
+.activeNavLink {
+  color: var(--color-text-primary);
+}
+
+.activeNavLink::after {
+  width: 100%;
+}
+
+/* ── CTA Button ── */
+.ctaBtn {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-bg);
+  background: var(--color-gold);
+  padding: var(--space-2) var(--space-6);
+  border-radius: var(--radius-sm);
+  cursor: none;
+  transition: background var(--transition-fast), transform var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+
+.ctaBtn:hover {
+  background: var(--color-text-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(200, 169, 110, 0.3);
+}
+
+/* ── Hamburger ── */
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: none;
+  padding: var(--space-2);
+  margin-left: auto;
+  z-index: 1001; /* Pastikan selalu di atas overlay */
+}
+
+.burger span {
+  display: block;
+  width: 22px;
+  height: 1px;
+  background: var(--color-text-primary);
+  transition: transform var(--transition-base), opacity var(--transition-fast), background var(--transition-fast);
+  transform-origin: center;
+}
+
+.burgerOpen span:nth-child(1) { transform: translateY(6px) rotate(45deg); background: var(--color-gold); }
+.burgerOpen span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.burgerOpen span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); background: var(--color-gold); }
+
+/* ── CINEMATIC MOBILE MENU OVERLAY ── */
+.mobileMenuOverlay {
+  display: none; /* Sembunyikan default */
+  position: fixed;
+  inset: 0; /* top, left, right, bottom 0 */
+  background: rgba(5, 5, 5, 0.98);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  z-index: 99;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobileMenuOpen {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.mobileNavLinks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  text-align: center;
+}
+
+.mobileNavLinks li {
+  /* Transisi elemen list untuk efek staggered */
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+}
+
+.linkOut {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.linkIn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mobileNavLinks a {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 4rem); /* Teks Raksasa Gen Z */
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.mobileNavLinks a:hover {
+  color: var(--color-gold);
+}
+
+.activeMobileLink {
+  color: var(--color-text-primary) !important;
+  font-style: italic; /* Sedikit aksen editorial untuk mobile active */
+}
+
+.mobileCta {
+  color: var(--color-gold) !important;
+  font-family: var(--font-mono) !important;
+  font-size: var(--text-md) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: var(--space-8);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .navLinks, .ctaBtn { display: none; }
+  .burger { display: flex; }
+  .mobileMenuOverlay { display: flex; } /* Aktifkan overlay layout flex di mobile */
+}

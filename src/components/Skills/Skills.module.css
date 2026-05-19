@@ -1,0 +1,246 @@
+/* components/Skills/Skills.module.css */
+
+/* --- CSS Variables: Dark Editorial Luxury --- */
+/* Catatan: Anda bisa memindahkan block :root ini ke globals.css Anda jika sudah ada */
+:root {
+  --color-bg: #050505; 
+  --color-surface: #0a0a0a; 
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-border: rgba(255, 255, 255, 0.15);
+  
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #a3a3a3;
+  --color-text-muted: #666666;
+  
+  --color-gold: #d4af37; 
+  --color-gold-dim: rgba(212, 175, 55, 0.6);
+  --color-gold-glow: rgba(212, 175, 55, 0.1);
+  
+  --font-display: 'Playfair Display', serif; 
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  
+  --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius-lg: 8px;
+}
+
+.skillsSection {
+  padding: 8rem 0;
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border-subtle);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* --- Section Label --- */
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 4rem;
+}
+
+.labelNum {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--color-gold);
+  letter-spacing: 0.15em;
+}
+
+.labelText {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.sectionLabel::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--color-border), transparent);
+}
+
+/* --- Tabs Filter --- */
+.tabsContainer {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabsContainer::-webkit-scrollbar { display: none; }
+
+.tabButton {
+  background: none;
+  border: none;
+  padding: 0 0 0.5rem 0;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: none;
+  transition: color var(--transition-base);
+  position: relative;
+}
+
+.tabButton:hover {
+  color: var(--color-text-primary);
+}
+
+.tabButton.active {
+  color: var(--color-gold);
+}
+
+.tabButton::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-gold);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--transition-base);
+}
+
+.tabButton.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* --- Grid & Transisi Fade --- */
+.gridWrapper {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.gridWrapper.transitioning {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+/* --- Spotlight Card --- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--transition-base), transform var(--transition-base);
+}
+
+.card:hover {
+  border-color: var(--color-border);
+  transform: translateY(-4px);
+}
+
+.spotlightCard::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+    var(--color-gold-glow),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.spotlightCard:hover::before {
+  opacity: 1;
+}
+
+.cardHeader, .skillList {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Card Header --- */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: 1rem;
+}
+
+.icon {
+  color: var(--color-gold);
+  font-size: 1.5rem;
+}
+
+.categoryTitle {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 300;
+  color: var(--color-text-primary);
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+/* --- Progress Bars --- */
+.skillList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.skillItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skillInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.skillName {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.skillLevel {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-gold);
+}
+
+.progressTrack {
+  width: 100%;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-gold-dim), var(--color-gold));
+  border-radius: 2px;
+  transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}

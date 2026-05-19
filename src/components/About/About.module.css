@@ -1,0 +1,261 @@
+/* components/About/About.module.css */
+
+.about {
+  padding: var(--section-padding) 0;
+  background: transparent; /* Agar tembus parallax background Hero */
+  border-top: 1px solid var(--color-border-subtle);
+  overflow: hidden; /* Mencegah overflow animasi tilt */
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-8);
+}
+
+/* ── Section Label ── */
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-16);
+}
+
+.labelNum {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-gold);
+  letter-spacing: 0.15em;
+}
+
+.labelText {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.sectionLabel::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(to right, var(--color-border), transparent);
+}
+
+/* ── INTERSECTION OBSERVER (Staggered Reveal) ── */
+.grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--space-24);
+  align-items: start;
+}
+
+/* Base state elemen sebelum di-scroll (Tembus pandang & turun ke bawah) */
+.staggerItem {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Active state setelah di-scroll (Berurutan / Staggered) */
+.showGrid .staggerItem {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.showGrid .staggerItem:nth-child(1) { transition-delay: 0.1s; }
+.showGrid .staggerItem:nth-child(2) { transition-delay: 0.25s; }
+.showGrid .staggerItem:nth-child(3) { transition-delay: 0.4s; }
+.showGrid .colRight .staggerItem:nth-child(1) { transition-delay: 0.3s; }
+.showGrid .colRight .staggerItem:nth-child(2) { transition-delay: 0.45s; }
+.showGrid .colRight .staggerItem:nth-child(3) { transition-delay: 0.6s; }
+
+
+/* ── HACKER SCRAMBLE TEXT ── */
+.heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-8);
+  /* Mencegah teks terpilih saat sedang dimainkan */
+  user-select: none; 
+}
+
+.scrambleText {
+  display: inline-block;
+}
+
+.headingAccent {
+  color: var(--color-gold);
+  font-style: italic;
+}
+
+.summary {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+  margin-bottom: var(--space-12);
+}
+
+/* ── 3D TILT EFFECT (Info Cards) ── */
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  perspective: 1000px; /* Kedalaman 3D untuk anak-anaknya */
+}
+
+.tiltCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  text-align: center;
+  position: relative;
+  overflow: hidden; /* Sembunyikan glare yang keluar batas */
+  /* Setup variabel awal */
+  --rx: 0deg;
+  --ry: 0deg;
+  --mouse-x: -1000px; /* Sembunyi jauh saat tidak dihover */
+  --mouse-y: -1000px;
+  /* Menerapkan nilai dari React */
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out, border-color var(--transition-fast);
+}
+
+.tiltCard:hover {
+  border-color: var(--color-gold-dim);
+  z-index: 10; /* Angkat kartu ke atas */
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* Sorotan Cahaya (Glare) mengikuti mouse */
+.tiltGlare {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle 80px at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.08), transparent);
+  pointer-events: none; /* Jangan blokir mouse move */
+  z-index: 1;
+}
+
+.infoValue {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 300;
+  color: var(--color-gold);
+  line-height: 1;
+  /* Angkat teks sedikit dari dasar 3D */
+  transform: translateZ(20px); 
+}
+
+.infoLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.08em;
+  transform: translateZ(10px);
+}
+
+/* ── Edu Card ── */
+.eduCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-left: 2px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  transition: border-color var(--transition-base), transform var(--transition-base);
+}
+
+.eduCard:hover {
+  border-left-color: var(--color-text-primary);
+  transform: translateX(4px);
+}
+
+.eduHeader {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: var(--space-4); margin-bottom: var(--space-1);
+}
+
+.institution { font-family: var(--font-body); font-size: var(--text-sm); font-weight: 600; letter-spacing: 0.02em; }
+.period { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-gold); white-space: nowrap; }
+.major { font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-4); }
+
+.achievements { list-style: none; display: flex; flex-direction: column; gap: var(--space-2); }
+.achievements li { display: flex; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.5; }
+.bullet { color: var(--color-gold); flex-shrink: 0; margin-top: 1px; font-size: 10px; }
+
+/* ── Soft Skills (MAGNETIC TAGS) ── */
+.softSkillsBox {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+
+.boxTitle {
+  font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted);
+  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: var(--space-4);
+}
+
+.tags {
+  display: flex; flex-wrap: wrap; gap: var(--space-2);
+}
+
+/* Komponen Magnetic Wrapper */
+.magneticTag {
+  display: inline-block;
+  /* Transisi khusus bergaya spring (membal) */
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tag {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  padding: var(--space-1) var(--space-3);
+  border-radius: 999px;
+  transition: color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.magneticTag:hover .tag {
+  color: var(--color-gold);
+  border-color: var(--color-gold-dim);
+  box-shadow: 0 4px 10px rgba(200, 169, 110, 0.15);
+}
+
+/* ── Contact Box ── */
+.contactBox {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  display: flex; flex-direction: column; gap: var(--space-3);
+}
+
+.emailLink {
+  display: flex; align-items: center; gap: var(--space-3);
+  font-size: var(--text-sm); color: var(--color-gold);
+  text-decoration: none; transition: opacity var(--transition-fast);
+  cursor: none;
+}
+
+.emailLink:hover { opacity: 0.75; }
+.emailIcon { font-size: var(--text-base); }
+.locationLine { font-size: var(--text-sm); color: var(--color-text-secondary); }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; gap: var(--space-12); }
+}
