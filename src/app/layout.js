@@ -10,18 +10,26 @@ export const metadata = {
   openGraph: {
     title: 'Ahnaf Isa — Software Engineer',
     description: 'Lihat karya dan proyek pengembangan web modern saya.',
-    url: 'https://porto-ahnaf-v1.vercel.app/', // Ganti dengan domain Vercel Anda nanti
+    url: 'https://porto-ahnaf-v1.vercel.app/',
     siteName: 'Ahnaf Portfolio',
+
     images: [
       {
-        url: '/og-image.png', // Masukkan screenshot web Anda ke folder 'public' dan beri nama og-image.jpg
+        url: 'https://porto-ahnaf-v1.vercel.app/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Portfolio Preview',
       },
     ],
+
     locale: 'id_ID',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ahnaf Isa — Software Engineer',
+    description: 'Lihat karya dan proyek pengembangan web modern saya.',
+    images: ['https://porto-ahnaf-v1.vercel.app/og-image.png'],
   },
 };
 
