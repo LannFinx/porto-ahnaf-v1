@@ -2,12 +2,13 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 
+// TRIK SENIOR: Berikan fallback string 're_build_dummy' agar Next.js 
+// tidak melempar error saat proses Build di mesin Vercel.
+const apiKey = process.env.RESEND_API_KEY || 're_build_dummy_key_123456';
+const resend = new Resend(apiKey);
+
 export async function POST(request) {
   try {
-    // 1. PINDAHKAN INISIALISASI KE DALAM SINI
-    // Sistem hanya akan membaca API Key saat ada request masuk
-    const resend = new Resend(process.env.RESEND_API_KEY);
-
     const body = await request.json();
     const { name, email, message } = body;
 
