@@ -263,6 +263,74 @@
   margin-top: var(--space-8);
 }
 
+/* =========================================
+   TAMBAHAN CSS UNTUK TOGGLE BAHASA
+   ========================================= */
+
+/* Wrapper untuk menyatukan tombol bahasa dan Hire Me di Desktop */
+.rightActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* Tombol Toggle Bahasa (Desktop) */
+.langToggleBtn {
+  background: transparent;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  cursor: none; /* Menyesuaikan custom cursor global Anda */
+  transition: all var(--transition-fast);
+  color: var(--color-text-secondary);
+}
+
+.langToggleBtn:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  background: rgba(200, 169, 110, 0.05);
+}
+
+.globeIcon {
+  font-size: 14px;
+}
+
+.langText {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+
+/* Tombol Toggle Bahasa (Mobile Menu) */
+.mobileLangToggle {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: var(--space-4) var(--space-8);
+  border-radius: 100px;
+  margin-top: var(--space-4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobileLangToggle:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+/* Sembunyikan div rightActions di Mobile agar tidak merusak layout Hamburger */
+@media (max-width: 768px) {
+  .rightActions { display: none; }
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .navLinks, .ctaBtn { display: none; }

@@ -1,6 +1,7 @@
 'use client';
 // components/Contact/Contact.js
 import { useState, useEffect, useRef } from 'react';
+import { useLanguage } from '@/context/LanguageContext'; // <── 1. IMPORT CONTEXT BAHASA
 import portfolioData from '@/data/portfolioData';
 import styles from './Contact.module.css';
 
@@ -37,6 +38,7 @@ const MagneticSocial = ({ href, children }) => {
 };
 
 export default function Contact() {
+  const { language } = useLanguage(); // <── 2. STATE BAHASA AKTIF
   const { profile, social } = portfolioData;
   const [time, setTime] = useState('');
   
@@ -86,6 +88,23 @@ export default function Contact() {
     }
   };
 
+  // ─── KAMUS LOKAL BILINGUAL UNTUK CONTACT ───
+  const textUI = {
+    subheading: { id: "Mari Berkolaborasi", en: "Let's Collaborate" },
+    localTime: { id: "Waktu Lokal (WITA):", en: "Local Time (WITA):" },
+    bigBtnText1: { id: "Hubungi ", en: "Get In " },
+    bigBtnText2: { id: "Saya.", en: "Touch." },
+    modalTitle: { id: "Kirim Pesan", en: "Send a Message" },
+    modalSub: { id: "Tertarik bekerja sama? Isi form di bawah ini.", en: "Interested in working together? Fill out the form below." },
+    successTitle: { id: "Pesan Terkirim!", en: "Message Sent!" },
+    successDesc: { id: "Terima kasih. Saya akan segera membalas email Anda.", en: "Thank you. I will get back to you shortly." },
+    placeName: { id: "Nama Lengkap", en: "Full Name" },
+    placeEmail: { id: "Alamat Email", en: "Email Address" },
+    placeMsg: { id: "Ceritakan tentang proyek Anda...", en: "Tell me about your project..." },
+    errorText: { id: "Gagal mengirim pesan. Silakan coba lagi nanti.", en: "Failed to send message. Please try again later." },
+    submitBtn: { id: "Kirim Pesan ↗", en: "Send Message ↗" }
+  };
+
   return (
     <footer className={styles.footer} id="contact">
       <div className={styles.container}>
@@ -93,10 +112,11 @@ export default function Contact() {
         {/* ── CTA UTAMA ── */}
         <div className={styles.ctaWrapper}>
           <div className={styles.topInfo}>
-            <p className={styles.subheading}>Mari Berkolaborasi</p>
+            {/* 3. Terapkan Bilingual */}
+            <p className={styles.subheading}>{textUI.subheading[language]}</p>
             <div className={styles.localTime}>
               <span className={styles.pulseDot}></span>
-              <span>Local Time (WITA): {time}</span>
+              <span>{textUI.localTime[language]} {time}</span>
             </div>
           </div>
 
@@ -105,7 +125,8 @@ export default function Contact() {
             className={styles.bigEmailBtn}
           >
             <span className={styles.defaultText}>
-              Get In <em className={styles.italicAksent}>Touch.</em>
+              {/* 3. Terapkan Bilingual */}
+              {textUI.bigBtnText1[language]} <em className={styles.italicAksent}>{textUI.bigBtnText2[language]}</em>
             </span>
           </button>
         </div>
@@ -131,22 +152,24 @@ export default function Contact() {
           <button className={styles.closeBtn} onClick={() => setIsModalOpen(false)}>×</button>
           
           <div className={styles.modalHeader}>
-            <h3>Kirim Pesan</h3>
-            <p>Tertarik bekerja sama? Isi form di bawah ini.</p>
+            {/* 3. Terapkan Bilingual */}
+            <h3>{textUI.modalTitle[language]}</h3>
+            <p>{textUI.modalSub[language]}</p>
           </div>
 
           {status === 'success' ? (
             <div className={styles.successState}>
               <div className={styles.checkIcon}>✓</div>
-              <h4>Pesan Terkirim!</h4>
-              <p>Terima kasih. Saya akan segera membalas email Anda.</p>
+              {/* 3. Terapkan Bilingual */}
+              <h4>{textUI.successTitle[language]}</h4>
+              <p>{textUI.successDesc[language]}</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className={styles.form}>
               <div className={styles.inputGroup}>
                 <input 
                   type="text" 
-                  placeholder="Nama Lengkap" 
+                  placeholder={textUI.placeName[language]} // <── Bilingual
                   required 
                   disabled={status === 'loading'}
                   value={formData.name}
@@ -156,7 +179,7 @@ export default function Contact() {
               <div className={styles.inputGroup}>
                 <input 
                   type="email" 
-                  placeholder="Alamat Email" 
+                  placeholder={textUI.placeEmail[language]} // <── Bilingual
                   required 
                   disabled={status === 'loading'}
                   value={formData.email}
@@ -165,7 +188,7 @@ export default function Contact() {
               </div>
               <div className={styles.inputGroup}>
                 <textarea 
-                  placeholder="Ceritakan tentang proyek Anda..." 
+                  placeholder={textUI.placeMsg[language]} // <── Bilingual
                   rows="4" 
                   required
                   disabled={status === 'loading'}
@@ -175,11 +198,12 @@ export default function Contact() {
               </div>
               
               {status === 'error' && (
-                <p className={styles.errorText}>Gagal mengirim pesan. Silakan coba lagi nanti.</p>
+                <p className={styles.errorText}>{textUI.errorText[language]}</p> // <── Bilingual
               )}
 
               <button type="submit" className={styles.submitBtn} disabled={status === 'loading'}>
-                {status === 'loading' ? <span className={styles.spinner}></span> : 'Kirim Pesan ↗'}
+                {/* 3. Terapkan Bilingual */}
+                {status === 'loading' ? <span className={styles.spinner}></span> : textUI.submitBtn[language]}
               </button>
             </form>
           )}

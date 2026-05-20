@@ -3,11 +3,13 @@
 // ─── Hero Interaktif Awwwards-Level dengan Custom Cursor & Magnetic UI ───
 
 import { useEffect, useRef, useState } from 'react';
+import { useLanguage } from '@/context/LanguageContext'; // <── 1. IMPORT CONTEXT BAHASA
 import portfolioData from '@/data/portfolioData';
 import styles from './Hero.module.css';
 
 export default function Hero() {
-  const { profile } = portfolioData;
+  const { language } = useLanguage(); // <── 2. STATE BAHASA
+  const { profile, heroUI } = portfolioData; // <── 3. TAMBAHKAN heroUI
   
   // ── REFS UNTUK PERFORMA TINGGI (Tanpa Re-render) ──
   const bgRef = useRef(null);
@@ -145,10 +147,12 @@ export default function Hero() {
           
           <div className={styles.statusBadge}>
             <span className={styles.statusDot} />
-            <span>Available for work</span>
+            {/* ── BILINGUAL: Badge Status ── */}
+            <span>{heroUI.badge[language]}</span>
           </div>
 
           {/* ── CINEMATIC SPLIT-TEXT REVEAL ── */}
+          {/* Bagian ini sengaja dibiarkan statis "Software Engineer & Designer." karena itu gelar universal yang sangat estetik */}
           <div 
             className={styles.headingWrapper}
             onMouseEnter={() => handleMouseEnterInteractable('EXPLORE')}
@@ -172,8 +176,9 @@ export default function Hero() {
 
           <div className={styles.meta}>
             <p className={styles.description}>
-              {profile.summary || "Membangun antarmuka modern yang elegan dan sistem backend yang efisien."}
-              <br />Berbasis di <strong>{profile.location}</strong>.
+              {/* ── BILINGUAL: Deskripsi dan Lokasi ── */}
+              {profile.summary[language]}
+              <br />{heroUI.locationPrefix[language]} <strong>{profile.location[language]}</strong>.
             </p>
 
             <div className={styles.actions}>
@@ -188,7 +193,8 @@ export default function Hero() {
                   onMouseEnter={() => handleMouseEnterInteractable('CLICK')}
                   onMouseLeave={handleMouseLeaveInteractable}
                 >
-                  Lihat Proyek
+                  {/* ── BILINGUAL: Teks Tombol Primary ── */}
+                  {heroUI.btnPrimary[language]}
                 </button>
               </div>
 
@@ -198,7 +204,8 @@ export default function Hero() {
                 onMouseEnter={() => handleMouseEnterInteractable('HELLO')}
                 onMouseLeave={handleMouseLeaveInteractable}
               >
-                Hubungi Saya
+                {/* ── BILINGUAL: Teks Tombol Secondary ── */}
+                {heroUI.btnSecondary[language]}
               </button>
             </div>
           </div>
@@ -210,14 +217,16 @@ export default function Hero() {
             onMouseLeave={handleMouseLeaveInteractable}
           >
             <div className={styles.scrollLine} />
-            <span className={styles.scrollLabel}>Scroll</span>
+            {/* ── BILINGUAL: Label Scroll ── */}
+            <span className={styles.scrollLabel}>{heroUI.scroll[language]}</span>
           </div>
         </div>
 
         <div className={styles.fullNameStrip}>
           <span>{profile.fullName}</span>
           <span className={styles.dot}>·</span>
-          <span>{profile.tagline}</span>
+          {/* ── BILINGUAL: Tagline Bawah ── */}
+          <span>{profile.tagline[language]}</span>
         </div>
       </section>
     </div>

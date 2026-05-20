@@ -3,6 +3,7 @@
 // ─── Seksi About Interaktif (3D Tilt, Scramble Text, Magnetic Tags, Staggered Reveal) ───
 
 import { useEffect, useRef, useState } from 'react';
+import { useLanguage } from '@/context/LanguageContext'; // <── 1. IMPORT CONTEXT BAHASA
 import portfolioData from '@/data/portfolioData';
 import styles from './About.module.css';
 
@@ -14,8 +15,12 @@ import styles from './About.module.css';
 const ScrambleText = ({ text }) => {
   const [displayText, setDisplayText] = useState(text);
   const intervalRef = useRef(null);
-  // Kumpulan karakter acak ala Matrix/Hacker
   const chars = '!<>-_\\/[]{}—=+*^?#_';
+
+  // Efek ini memastikan teks yang diacak terupdate jika bahasa diganti
+  useEffect(() => {
+    setDisplayText(text);
+  }, [text]);
 
   const handleMouseEnter = () => {
     let iteration = 0;
@@ -31,7 +36,6 @@ const ScrambleText = ({ text }) => {
           })
           .join('')
       );
-      // Kecepatan resolve huruf (semakin kecil penambahannya, semakin lama acaknya)
       iteration += 1 / 3; 
       if (iteration >= text.length) clearInterval(intervalRef.current);
     }, 30);
@@ -54,17 +58,15 @@ const TiltCard = ({ children, className }) => {
     if (!card) return;
 
     const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left; // Posisi X mouse di dalam kartu
-    const y = e.clientY - rect.top;  // Posisi Y mouse di dalam kartu
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    // Kalkulasi rotasi (Maksimal rotasi 15 derajat)
     const rotateX = ((y - centerY) / centerY) * -15; 
     const rotateY = ((x - centerX) / centerX) * 15;
 
-    // Terapkan langsung ke DOM (Bypass React State demi FPS tinggi)
     card.style.setProperty('--rx', `${rotateX}deg`);
     card.style.setProperty('--ry', `${rotateY}deg`);
     card.style.setProperty('--mouse-x', `${x}px`);
@@ -74,10 +76,9 @@ const TiltCard = ({ children, className }) => {
   const handleMouseLeave = () => {
     const card = cardRef.current;
     if (!card) return;
-    // Kembalikan rotasi ke 0 dengan mulus saat mouse pergi
     card.style.setProperty('--rx', `0deg`);
     card.style.setProperty('--ry', `0deg`);
-    card.style.setProperty('--mouse-x', `-1000px`); // Sembunyikan glare
+    card.style.setProperty('--mouse-x', `-1000px`);
     card.style.setProperty('--mouse-y', `-1000px`);
   };
 
@@ -89,7 +90,6 @@ const TiltCard = ({ children, className }) => {
       onMouseLeave={handleMouseLeave}
     >
       {children}
-      {/* Glare effect overlay */}
       <div className={styles.tiltGlare} />
     </div>
   );
@@ -106,7 +106,6 @@ const MagneticTag = ({ children, className }) => {
     const rect = tag.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
-    // Tarik tag mengikuti mouse sebesar 40% dari jarak
     tag.style.transform = `translate(${x * 0.4}px, ${y * 0.4}px)`;
   };
 
@@ -131,6 +130,7 @@ const MagneticTag = ({ children, className }) => {
 // ==========================================
 
 export default function About() {
+  const { language } = useLanguage(); // <── 2. STATE BAHASA
   const { profile, education, softSkills } = portfolioData;
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -141,16 +141,30 @@ export default function About() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          // Berhenti mengamati setelah muncul sekali (agar tidak mengulang terus)
           observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.2 } // Trigger saat 20% bagian ini terlihat di layar
+      { threshold: 0.2 }
     );
 
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
+
+  // Teks Header Bilingual (Bisa ditaruh langsung di sini agar efisien)
+  const headerTexts = {
+    line1: { id: "Merancang Kode,", en: "Crafting Code," },
+    line2: { id: "Membangun Pengalaman.", en: "Building Experiences." },
+    aboutLabel: { id: "Tentang", en: "About" }
+  };
+
+  // Label Info Card Bilingual
+  const infoLabels = {
+    years: { id: "Tahun Belajar", en: "Years of Study" },
+    projects: { id: "Proyek Selesai", en: "Completed Projects" },
+    stacks: { id: "Tech Stacks", en: "Tech Stacks" },
+    awards: { id: "Juara Provinsi", en: "Provincial Champ" }
+  };
 
   return (
     <section className={styles.about} id="about" ref={sectionRef}>
@@ -159,23 +173,22 @@ export default function About() {
         {/* Section Label */}
         <div className={styles.sectionLabel}>
           <span className={styles.labelNum}>01</span>
-          <span className={styles.labelText}>About</span>
+          <span className={styles.labelText}>{headerTexts.aboutLabel[language]}</span>
         </div>
 
-        {/* Konten dua kolom (Tambahkan class isVisible jika terdeteksi scroll) */}
         <div className={`${styles.grid} ${isVisible ? styles.showGrid : ''}`}>
 
           {/* Kolom Kiri — Teks */}
           <div className={styles.colLeft}>
             <h2 className={`${styles.heading} ${styles.staggerItem}`}>
-              <ScrambleText text="Merancang Kode," />
+              <ScrambleText text={headerTexts.line1[language]} />
               <br />
               <em className={styles.headingAccent}>
-                <ScrambleText text="Membangun Pengalaman." />
+                <ScrambleText text={headerTexts.line2[language]} />
               </em>
             </h2>
 
-            <p className={`${styles.summary} ${styles.staggerItem}`}>{profile.summary}</p>
+            <p className={`${styles.summary} ${styles.staggerItem}`}>{profile.summary[language]}</p>
 
             {/* Pendidikan */}
             {education.map((edu) => (
@@ -184,9 +197,10 @@ export default function About() {
                   <span className={styles.institution}>{edu.institution}</span>
                   <span className={styles.period}>{edu.period}</span>
                 </div>
-                <p className={styles.major}>{edu.major}</p>
+                <p className={styles.major}>{edu.major[language]}</p>
                 <ul className={styles.achievements}>
-                  {edu.achievements.map((ach, i) => (
+                  {/* Pemanggilan yang benar untuk Array di dalam objek bilingual */}
+                  {edu.achievements[language].map((ach, i) => (
                     <li key={i}>
                       <span className={styles.bullet}>◈</span>
                       {ach}
@@ -199,33 +213,34 @@ export default function About() {
 
           {/* Kolom Kanan — Info + Soft Skills */}
           <div className={styles.colRight}>
-            {/* Info Cards dengan 3D Tilt Playability */}
+            {/* Info Cards */}
             <div className={`${styles.infoGrid} ${styles.staggerItem}`}>
               <TiltCard className={styles.infoCard}>
                 <span className={styles.infoValue}>2+</span>
-                <span className={styles.infoLabel}>Tahun Belajar</span>
+                <span className={styles.infoLabel}>{infoLabels.years[language]}</span>
               </TiltCard>
               <TiltCard className={styles.infoCard}>
                 <span className={styles.infoValue}>5+</span>
-                <span className={styles.infoLabel}>Proyek Selesai</span>
+                <span className={styles.infoLabel}>{infoLabels.projects[language]}</span>
               </TiltCard>
               <TiltCard className={styles.infoCard}>
                 <span className={styles.infoValue}>3</span>
-                <span className={styles.infoLabel}>Tech Stacks</span>
+                <span className={styles.infoLabel}>{infoLabels.stacks[language]}</span>
               </TiltCard>
               <TiltCard className={styles.infoCard}>
                 <span className={styles.infoValue}>1st</span>
-                <span className={styles.infoLabel}>Juara Provinsi</span>
+                <span className={styles.infoLabel}>{infoLabels.awards[language]}</span>
               </TiltCard>
             </div>
 
-            {/* Soft Skills dengan Efek Magnetic/Membal */}
+            {/* Soft Skills */}
             <div className={`${styles.softSkillsBox} ${styles.staggerItem}`}>
               <h3 className={styles.boxTitle}>Soft Skills</h3>
               <div className={styles.tags}>
-                {softSkills.map((skill) => (
-                  <MagneticTag className={styles.tag} key={skill}>
-                    {skill}
+                {softSkills.map((skill, index) => (
+                  /* Pastikan key unik dan ambil bahasa yang aktif */
+                  <MagneticTag className={styles.tag} key={index}>
+                    {skill[language]}
                   </MagneticTag>
                 ))}
               </div>
@@ -237,7 +252,7 @@ export default function About() {
                 <span className={styles.emailIcon}>✉</span>
                 {profile.email}
               </a>
-              <p className={styles.locationLine}>📍 {profile.location}</p>
+              <p className={styles.locationLine}>📍 {profile.location[language]}</p>
             </div>
           </div>
         </div>

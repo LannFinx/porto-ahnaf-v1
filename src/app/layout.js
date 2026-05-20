@@ -1,4 +1,5 @@
 // app/layout.js
+import { LanguageProvider } from '@/context/LanguageContext'; // <── IMPOR PROVIDER
 import './globals.css';
 
 export const metadata = {
@@ -12,7 +13,6 @@ export const metadata = {
     description: 'Lihat karya dan proyek pengembangan web modern saya.',
     url: 'https://porto-ahnaf-v1.vercel.app/',
     siteName: 'Ahnaf Portfolio',
-
     images: [
       {
         url: 'https://porto-ahnaf-v1.vercel.app/og-image.png',
@@ -21,7 +21,6 @@ export const metadata = {
         alt: 'Portfolio Preview',
       },
     ],
-
     locale: 'id_ID',
     type: 'website',
   },
@@ -37,11 +36,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id">
       <head>
-        {/* Preconnect Google Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body>{children}</body>
+      <body>
+        {/* Bungkus dengan LanguageProvider di sini */}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   );
 }

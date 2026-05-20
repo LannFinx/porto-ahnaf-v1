@@ -3,11 +3,13 @@
 // ─── Navbar Modern: Auto-hide, Spy Scroll, Progress Bar & Cinematic Menu ───
 
 import { useState, useEffect, useRef } from 'react';
+import { useLanguage } from '@/context/LanguageContext'; // <── IMPORT CONTEXT
 import portfolioData from '@/data/portfolioData';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
   const { navLinks, profile } = portfolioData;
+  const { language, changeLanguage } = useLanguage(); // <── STATE BAHASA
   
   // State Management
   const [isScrolled, setIsScrolled] = useState(false);
@@ -25,7 +27,6 @@ export default function Navbar() {
       const currentScrollY = window.scrollY;
       
       // 1A. Progress Bar Kalkulasi
-      // Hitung persentase halaman yang sudah di-scroll
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolled = (winScroll / height) * 100;
@@ -35,12 +36,10 @@ export default function Navbar() {
       setIsScrolled(currentScrollY > 50);
 
       // 1C. Smart Auto-Hide Logic
-      // Sembunyikan navbar jika scroll ke bawah & sudah lewat hero
       if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
         setIsHidden(true);
-        setMenuOpen(false); // Tutup menu mobile jika terpaksa scroll
+        setMenuOpen(false); 
       } else {
-        // Tampilkan jika scroll ke atas
         setIsHidden(false);
       }
       
@@ -51,18 +50,17 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // LOGIKA 2: Spy Scroll (Mendeteksi section mana yang aktif)
+  // LOGIKA 2: Spy Scroll
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: '-20% 0px -60% 0px', // Deteksi saat elemen berada di tengah viewport
+      rootMargin: '-20% 0px -60% 0px', 
       threshold: 0
     };
 
     const observerCallback = (entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // Update state dengan ID elemen yang sedang terlihat
           setActiveSection(`#${entry.target.id}`);
         }
       });
@@ -70,7 +68,6 @@ export default function Navbar() {
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
     
-    // Amati semua elemen <section> yang ada di halaman
     document.querySelectorAll('section').forEach(section => {
       observer.observe(section);
     });
@@ -85,24 +82,26 @@ export default function Navbar() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // Handler klik menu
   const handleNavClick = (href) => {
     setMenuOpen(false);
     const id = href.replace('#', '');
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Fungsi Toggle Bahasa (ID <-> EN)
+  const toggleLanguage = () => {
+    changeLanguage(language === 'id' ? 'en' : 'id');
+  };
+
   return (
     <>
       {/* HEADER UTAMA */}
-      {/* Class dinamis: scrolled (transparan blur) dan hidden (tersembunyi ke atas) */}
       <header className={`
         ${styles.header} 
         ${isScrolled ? styles.scrolled : ''} 
         ${isHidden ? styles.hidden : ''}
       `}>
         
-        {/* Progress Bar di bagian bawah Navbar */}
         <div className={styles.progressBarWrapper}>
           <div 
             className={styles.progressBar} 
@@ -123,20 +122,26 @@ export default function Navbar() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  // Berikan class 'active' jika link ini sama dengan state activeSection
                   className={`${styles.navLink} ${activeSection === link.href ? styles.activeNavLink : ''}`}
                   onClick={(e) => { e.preventDefault(); handleNavClick(link.href); }}
                 >
-                  {link.label}
+                  {link.label[language]} {/* <── BILINGUAL */}
                 </a>
               </li>
             ))}
           </ul>
 
-          {/* CTA Button */}
-          <a href={`mailto:${profile.email}`} className={styles.ctaBtn}>
-            Hire Me
-          </a>
+          {/* ── BUNGKUSAN KANAN: TOGGLE BAHASA + HIRE ME ── */}
+          <div className={styles.rightActions}>
+            <button className={styles.langToggleBtn} onClick={toggleLanguage} aria-label="Toggle Language">
+              <span className={styles.globeIcon}>🌐</span>
+              <span className={styles.langText}>{language === 'id' ? 'IDN' : 'ENG'}</span>
+            </button>
+
+            <a href={`mailto:${profile.email}`} className={styles.ctaBtn}>
+              {language === 'id' ? 'Hubungi' : 'Hire Me'} {/* <── BILINGUAL */}
+            </a>
+          </div>
 
           {/* Hamburger — Mobile */}
           <button
@@ -155,7 +160,6 @@ export default function Navbar() {
           {navLinks.map((link, index) => (
             <li 
               key={link.href} 
-              // Inline style trick untuk efek delay (staggered) saat muncul
               style={{ transitionDelay: menuOpen ? `${0.1 + (index * 0.1)}s` : '0s' }}
               className={menuOpen ? styles.linkIn : styles.linkOut}
             >
@@ -164,18 +168,30 @@ export default function Navbar() {
                 className={activeSection === link.href ? styles.activeMobileLink : ''}
                 onClick={(e) => { e.preventDefault(); handleNavClick(link.href); }}
               >
-                {link.label}
+                {link.label[language]} {/* <── BILINGUAL */}
               </a>
             </li>
           ))}
+          
           <li 
             style={{ transitionDelay: menuOpen ? `${0.1 + (navLinks.length * 0.1)}s` : '0s' }}
             className={menuOpen ? styles.linkIn : styles.linkOut}
           >
             <a href={`mailto:${profile.email}`} className={styles.mobileCta}>
-              Hire Me →
+              {language === 'id' ? 'Hubungi Saya →' : 'Hire Me →'}
             </a>
           </li>
+
+          {/* ── TOMBOL TOGGLE BAHASA MOBILE ── */}
+          <li 
+            style={{ transitionDelay: menuOpen ? `${0.1 + ((navLinks.length + 1) * 0.1)}s` : '0s' }}
+            className={menuOpen ? styles.linkIn : styles.linkOut}
+          >
+            <button className={styles.mobileLangToggle} onClick={toggleLanguage}>
+              🌐 Switch to {language === 'id' ? 'English' : 'Indonesian'}
+            </button>
+          </li>
+
         </ul>
       </div>
     </>

@@ -7,16 +7,24 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 export async function POST(request) {
   try {
     const body = await request.json();
-    const userMessage = body.message;
+    // Menangkap pesan dan bahasa dari frontend (default 'id' jika kosong)
+    const { message: userMessage, language = 'id' } = body;
 
     if (!userMessage) {
       return NextResponse.json({ error: "Input terminal kosong. Harap masukkan perintah." }, { status: 400 });
     }
 
+    // ─── INSTRUKSI BAHASA DINAMIS ───
+    const langInstruction = language === 'en' 
+      ? "CRITICAL RULE: You MUST reply entirely in ENGLISH. Maintain your elegant and mysterious persona." 
+      : "ATURAN KRITIS: Kamu WAJIB merespons sepenuhnya menggunakan BAHASA INDONESIA. Pertahankan nada bicaramu yang elegan.";
+
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       systemInstruction: `Kamu adalah AHNAF_OS_CORE, entitas kecerdasan buatan eksklusif milik Muhammad Ahnaf Isa Hammam Lisualla (Ahnaf/Nap).
       
+      ${langInstruction}
+
       NADA BICARAMU:
       Elegan, misterius, tajam, dan efisien ala asisten AI kelas atas (seperti J.A.R.V.I.S). Jangan membalas seperti ensiklopedia kaku. Jawablah dengan ringkas dan langsung pada intinya.
 
@@ -61,7 +69,6 @@ export async function POST(request) {
 
   } catch (error) {
     console.error("Gemini API Error:", error);
-    // Mengubah pesan error 503/server sibuk agar terdengar seperti sistem yang sedang di-hack / overload
     return NextResponse.json(
       { error: "SYSTEM_OVERLOAD: Terlalu banyak permintaan di server utama. Silakan coba beberapa saat lagi." },
       { status: 500 }

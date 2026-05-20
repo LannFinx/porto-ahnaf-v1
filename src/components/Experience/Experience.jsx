@@ -1,90 +1,69 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
+import { useLanguage } from '@/context/LanguageContext'; // <── IMPORT CONTEXT
 import portfolioData from '@/data/portfolioData';
 import styles from './Experience.module.css';
 
 // ─── Komponen ExperienceItem Individual ───
-// Dipisah agar setiap item bisa mengelola state 'isOpen' (Accordion) 
-// dan observasinya sendiri (Intersection Observer)
 const ExperienceItem = ({ exp, index }) => {
+  const { language } = useLanguage(); // <── STATE BAHASA
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const itemRef = useRef(null);
 
-  // 1. Hook useEffect untuk Intersection Observer (Scroll Reveal)
   useEffect(() => {
-    // Observer untuk mendeteksi kapan elemen masuk ke viewport
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           setIsVisible(true);
-          observer.unobserve(entries[0].target); // Stop observasi setelah terlihat
+          observer.unobserve(entries[0].target); 
         }
       },
-      {
-        threshold: 0.1, // Trigger saat 10% elemen terlihat
-        rootMargin: '0px 0px -50px 0px' // Sedikit offset
-      }
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
     );
 
-    if (itemRef.current) {
-      observer.observe(itemRef.current);
-    }
-
-    return () => {
-      if (itemRef.current) observer.unobserve(itemRef.current);
-    };
+    if (itemRef.current) observer.observe(itemRef.current);
+    return () => { if (itemRef.current) observer.unobserve(itemRef.current); };
   }, []);
 
-  // 2. Fungsi Toggle untuk Accordion
-  const toggleAccordion = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleAccordion = () => setIsOpen(!isOpen);
+
+  // Teks Tombol Accordion Bilingual
+  const btnText = isOpen 
+    ? (language === 'id' ? '[-] Tutup Detail' : '[-] Close Details')
+    : (language === 'id' ? '[+] Baca Detail' : '[+] Read Details');
 
   return (
-    // Tambahkan class 'visible' dari CSS Modules saat state isVisible true
-    // Tambahkan delay berdasarkan index agar animasi muncul berurutan (staggered)
     <div 
       className={`${styles.item} ${isVisible ? styles.visible : ''}`} 
       style={{ transitionDelay: `${index * 150}ms` }}
       ref={itemRef}
     >
-      {/* 3. Active Timeline Indicator */}
       <div className={`${styles.timelineIndicator} ${isOpen ? styles.indicatorActive : ''}`}></div>
 
-      {/* Kolom Meta (Tahun, Perusahaan & Tipe) */}
       <div className={styles.meta}>
-        <span className={styles.period}>{exp.period}</span>
+        <span className={styles.period}>{exp.period[language]}</span> {/* BILINGUAL */}
         <h3 className={styles.company}>{exp.company}</h3>
-        <span className={styles.typeTag}>
-          {exp.type}
-        </span>
+        <span className={styles.typeTag}>{exp.type[language]}</span> {/* BILINGUAL */}
       </div>
 
-      {/* Kolom Detail (Peran, Deskripsi & Highlights) */}
       <div className={styles.details}>
-        <h4 className={styles.title}>{exp.role}</h4>
+        <h4 className={styles.title}>{exp.role[language]}</h4> {/* BILINGUAL */}
         
-        <p className={styles.descriptionText}>
-          {exp.description}
-        </p>
+        <p className={styles.descriptionText}>{exp.description[language]}</p> {/* BILINGUAL */}
 
-        {/* 4. Interactive Accordion (Tombol Toggle) */}
         <button 
           className={styles.accordionToggle} 
           onClick={toggleAccordion}
           aria-expanded={isOpen}
         >
-          {isOpen ? '[-] Tutup Detail' : '[+] Baca Detail'}
+          {btnText}
         </button>
 
-        {/* 
-          Bungkus ul (highlights) dalam div dengan class accordionContent.
-          CSS transisi max-height akan diaplikasikan di sini berdasarkan class 'open'
-        */}
         <div className={`${styles.accordionContent} ${isOpen ? styles.open : ''}`}>
           <ul className={styles.descriptionList}>
-            {exp.highlights.map((highlight, i) => (
+            {/* BILINGUAL Array Map */}
+            {exp.highlights[language].map((highlight, i) => (
               <li key={i}>
                 <span className={styles.bullet}>◈</span>
                 {highlight}
@@ -104,8 +83,6 @@ export default function Experience() {
   return (
     <section className={styles.experience} id="experience">
       <div className={styles.container}>
-        
-        {/* Section Label */}
         <div className={styles.sectionLabel}>
           <span className={styles.labelNum}>02</span>
           <span className={styles.labelText}>Experience</span>

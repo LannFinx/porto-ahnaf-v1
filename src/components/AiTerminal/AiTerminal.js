@@ -1,16 +1,46 @@
 'use client';
 // components/AiTerminal/AiTerminal.js
 import { useState, useRef, useEffect } from 'react';
+import { useLanguage } from '@/context/LanguageContext'; // <── 1. IMPORT CONTEXT BAHASA
 import styles from './AiTerminal.module.css';
 
 export default function AiTerminal() {
+  const { language } = useLanguage(); // <── 2. STATE BAHASA AKTIF
+  
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: 'ai', text: 'Sistem Terhubung. Saya adalah AI representasi Ahnaf. Ajukan pertanyaan, dan saya bisa memandu Anda menjelajahi halaman ini.' }
-  ]);
   
+  // ─── KAMUS BILINGUAL LOKAL ───
+  const uiText = {
+    welcome: {
+      id: 'Sistem Terhubung. Saya adalah AI representasi Ahnaf. Ajukan pertanyaan, dan saya bisa memandu Anda menjelajahi halaman ini.',
+      en: 'System Connected. I am an AI representing Ahnaf. Ask a question, and I can guide you through this page.'
+    },
+    placeholder: {
+      id: "Ketik: 'tunjukkan project game' atau sapa...",
+      en: "Type: 'show me your projects' or say hi..."
+    },
+    errorNetwork: {
+      id: '[NETWORK ERROR]: Koneksi terputus.',
+      en: '[NETWORK ERROR]: Connection lost.'
+    }
+  };
+
+  const [messages, setMessages] = useState([
+    { role: 'ai', text: uiText.welcome.id } // Set awal (fallback)
+  ]);
+
+  // Efek ini akan mengganti bahasa pesan sapaan JIKA user belum mengetik apa-apa
+  useEffect(() => {
+    setMessages((prev) => {
+      if (prev.length === 1 && prev[0].role === 'ai') {
+        return [{ role: 'ai', text: uiText.welcome[language] }];
+      }
+      return prev; // Jika sudah ada chat, biarkan history sebelumnya apa adanya
+    });
+  }, [language]);
+
   const messagesEndRef = useRef(null);
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
@@ -54,7 +84,8 @@ export default function AiTerminal() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMsg })
+        // ─── 3. INJEKSI BAHASA KE PAYLOAD API ───
+        body: JSON.stringify({ message: userMsg, language: language }) 
       });
 
       const data = await response.json();
@@ -62,18 +93,16 @@ export default function AiTerminal() {
       if (response.ok) {
         setMessages(prev => [...prev, { role: 'ai', text: data.reply }]);
         
-        // ─── DOM MANIPULATION (MENGGUNAKAN FUNGSI YANG SUDAH DIBUAT) ───
+        // ─── DOM MANIPULATION ───
         if (data.action) {
           executeAction(data.action);
         }
-        // ───────────────────────────────────────────────────────────────
 
       } else {
-        // Tampilkan pesan jika Google sedang 503 / sibuk
         setMessages(prev => [...prev, { role: 'ai', text: `[SYSTEM ALERT]: ${data.error}` }]);
       }
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'ai', text: '[NETWORK ERROR]: Koneksi terputus.' }]);
+      setMessages(prev => [...prev, { role: 'ai', text: uiText.errorNetwork[language] }]);
     } finally {
       setIsLoading(false);
     }
@@ -113,7 +142,7 @@ export default function AiTerminal() {
             type="text" 
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ketik: 'tunjukkan project game' atau sapa..." 
+            placeholder={uiText.placeholder[language]} // <── 4. Placeholder Bilingual
             className={styles.inputField}
             autoComplete="off"
             disabled={isLoading}

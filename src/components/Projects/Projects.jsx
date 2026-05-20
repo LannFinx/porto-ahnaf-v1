@@ -3,27 +3,37 @@
 // ─── Interaksi Hover, Filter Kategori, & Cursor-Attached Image ───
 
 import { useState, useRef, useEffect } from 'react';
-import Image from 'next/image'; // IMPORT NEXT IMAGE
+import Image from 'next/image';
+import { useLanguage } from '@/context/LanguageContext'; // <── IMPORT CONTEXT
 import styles from './Projects.module.css';
 
 export default function Projects() {
+  const { language } = useLanguage(); // <── STATE BAHASA
+
+  // ARRAY INTERNAL DIMODIFIKASI MENJADI BILINGUAL
   const projectsData = [
     {
       id: "p1",
       title: "LuxurySneakers",
       category: "E-Commerce",
       tech: "Web Development",
-      desc: "Aplikasi berbasis web E-commerce premium yang dirancang untuk kurasi dan penjualan produk high-end dengan pengalaman visual yang mewah.",
-      image: "/luxury.jpg", // Mengambil dari folder public
-      link: "" // Kosongkan jika tidak ada link live
+      desc: {
+        id: "Aplikasi berbasis web E-commerce premium yang dirancang untuk kurasi dan penjualan produk high-end dengan pengalaman visual yang mewah.",
+        en: "A premium E-commerce web application designed for curating and selling high-end products with a luxurious visual experience."
+      },
+      image: "/luxury.jpg", 
+      link: "" 
     },
     {
       id: "p2",
       title: "InfoUKS",
       category: "Health Integration",
       tech: "Web Engineering",
-      desc: "Integrasi sistem informasi kesehatan siswa dan manajemen rekam medis terpadu ke dalam satu platform web yang responsif dan dinamis.",
-      image: "/infouk.jpg", // Sesuai dengan nama file Anda
+      desc: {
+        id: "Integrasi sistem informasi kesehatan siswa dan manajemen rekam medis terpadu ke dalam satu platform web yang responsif dan dinamis.",
+        en: "Integration of student health information systems and unified medical records management into a responsive and dynamic web platform."
+      },
+      image: "/infouk.jpg", 
       link: ""
     },
     {
@@ -31,7 +41,10 @@ export default function Projects() {
       title: "Spotbanua",
       category: "Mobile App Design",
       tech: "UI/UX Design",
-      desc: "Perancangan antarmuka (UI/UX) aplikasi destinasi wisata interaktif untuk mempermudah eksplorasi tempat menarik di Banjarbaru dan wilayah Kalimantan Selatan.",
+      desc: {
+        id: "Perancangan antarmuka (UI/UX) aplikasi destinasi wisata interaktif untuk mempermudah eksplorasi tempat menarik di Banjarbaru dan wilayah Kalimantan Selatan.",
+        en: "UI/UX design for an interactive tourist destination app to facilitate the exploration of points of interest in Banjarbaru and South Kalimantan."
+      },
       image: "/spotbanua.jpg",
       link: ""
     },
@@ -40,7 +53,10 @@ export default function Projects() {
       title: "Bimbel Smart",
       category: "Information System",
       tech: "Web Platform",
-      desc: "Platform sistem informasi manajemen bimbingan belajar cerdas untuk optimalisasi administrasi pendidikan dan monitoring akademik siswa.",
+      desc: {
+        id: "Platform sistem informasi manajemen bimbingan belajar cerdas untuk optimalisasi administrasi pendidikan dan monitoring akademik siswa.",
+        en: "A smart tutoring management information system platform for optimizing educational administration and monitoring student academics."
+      },
       image: "/bimbel.png",
       link: "https://bimbel-smart.neumediradev.my.id/"
     },
@@ -49,8 +65,11 @@ export default function Projects() {
       title: "Project: Forever",
       category: "Creative Web Design",
       tech: "Front-End Integration",
-      desc: "Eksplorasi antarmuka web interaktif yang menerapkan teknik digital storytelling dengan tata letak editorial asimetris dan animasi berbasis scroll.",
-      image: "/projectforever.png", // Pastikan Anda memasukkan screenshot web ini ke folder public dengan nama ini
+      desc: {
+        id: "Eksplorasi antarmuka web interaktif yang menerapkan teknik digital storytelling dengan tata letak editorial asimetris dan animasi berbasis scroll.",
+        en: "Exploration of interactive web interfaces applying digital storytelling techniques with asymmetrical editorial layouts and scroll-based animations."
+      },
+      image: "/projectforever.png", 
       link: "https://project-forever.vercel.app/"
     },
     {
@@ -58,8 +77,11 @@ export default function Projects() {
       title: "Block Master",
       category: "Experimental Game Dev",
       tech: "Phaser.js · JavaScript",
-      desc: "Proyek eksperimen game 2D arcade untuk menguji kalkulasi fisika (collision detection), penanganan input real-time, dan state management pada browser.",
-      image: "/blockmaster.png", // Pastikan Anda memasukkan screenshot game ini ke folder public dengan nama ini
+      desc: {
+        id: "Proyek eksperimen game 2D arcade untuk menguji kalkulasi fisika (collision detection), penanganan input real-time, dan state management pada browser.",
+        en: "An experimental 2D arcade game project to test physics calculations (collision detection), real-time input handling, and state management in the browser."
+      },
+      image: "/blockmaster.png", 
       link: "https://game-gabut-lemon.vercel.app/"
     },
     {
@@ -67,8 +89,11 @@ export default function Projects() {
       title: "Rental Random Platform",
       category: "Management System",
       tech: "Laravel · Web Engineering",
-      desc: "Sistem manajemen persewaan berbasis web yang mengimplementasikan sistem autentikasi aman, kontrol akses multi-role, serta perancangan arsitektur database relasional untuk pelacakan inventaris dan riwayat transaksi.",
-      image: "/rental.png", // Ambil screenshot halaman login/dashboard, beri nama rental.jpg, masukkan ke folder public
+      desc: {
+        id: "Sistem manajemen persewaan berbasis web yang mengimplementasikan sistem autentikasi aman, kontrol akses multi-role, serta perancangan arsitektur database relasional untuk pelacakan inventaris dan riwayat transaksi.",
+        en: "A web-based rental management system implementing secure authentication, multi-role access control, and a relational database architecture for inventory and transaction tracking."
+      },
+      image: "/rental.png", 
       link: "https://rental-randoom.neumediradev.my.id/login"
     }
   ];
@@ -90,16 +115,12 @@ export default function Projects() {
     setTimeout(() => setClickedCard(null), 500);
   };
 
-  // ─── LOGIKA CURSOR-ATTACHED IMAGE ───
   useEffect(() => {
     const moveImage = (e) => {
-      // SABUK PENGAMAN MOBILE (Matikan efek kursor di layar kecil/HP)
       if (window.innerWidth <= 768) return;
-
       if (cursorImageRef.current) {
         const x = e.clientX;
         const y = e.clientY;
-
         cursorImageRef.current.animate({
           left: `${x}px`,
           top: `${y}px`
@@ -116,7 +137,9 @@ export default function Projects() {
 
         <div className={styles.sectionLabel}>
           <span className={styles.labelNum}>03</span>
-          <span className={styles.labelText}>Selected Works</span>
+          <span className={styles.labelText}>
+            {language === 'id' ? 'Karya Pilihan' : 'Selected Works'}
+          </span>
         </div>
 
         <div className={styles.filterContainer}>
@@ -126,7 +149,7 @@ export default function Projects() {
               onClick={() => setActiveFilter(category)}
               className={`${styles.filterBtn} ${activeFilter === category ? styles.activeFilter : ''}`}
             >
-              {category}
+              {category === 'All' ? (language === 'id' ? 'Semua' : 'All') : category}
             </button>
           ))}
         </div>
@@ -159,14 +182,14 @@ export default function Projects() {
                 )}
               </h3>
 
-              <p className={styles.desc}>{proj.desc}</p>
+              {/* BILINGUAL: Deskripsi Proyek */}
+              <p className={styles.desc}>{proj.desc[language]}</p>
 
-              {/* GAMBAR STATIS MOBILE MENGGUNAKAN NEXT/IMAGE */}
               <Image
                 src={proj.image}
                 alt={proj.title}
-                width={800} // Resolusi optimal
-                height={500} // Rasio aspek 8:5
+                width={800} 
+                height={500} 
                 className={styles.mobileImage}
               />
 
@@ -177,7 +200,6 @@ export default function Projects() {
 
       </div>
 
-      {/* ─── ELEMEN GAMBAR MELAYANG (Khusus Desktop) ─── */}
       <div
         ref={cursorImageRef}
         className={`${styles.floatingImageContainer} ${activeImage ? styles.showImage : ''}`}
@@ -185,10 +207,10 @@ export default function Projects() {
         <Image
           src={activeImage || projectsData[0].image}
           alt="Project Preview"
-          width={600}  // Render resolusi lebih kecil sedikit agar ringan untuk kursor
+          width={600}  
           height={400}
           className={styles.floatingImg}
-          priority // Prioritaskan loading untuk gambar pertama agar animasi kursor instan
+          priority 
         />
       </div>
     </section>
