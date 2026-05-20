@@ -2,11 +2,12 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 
-// Sistem akan membaca kunci rahasia dari file .env.local Anda
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request) {
   try {
+    // 1. PINDAHKAN INISIALISASI KE DALAM SINI
+    // Sistem hanya akan membaca API Key saat ada request masuk
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
     const body = await request.json();
     const { name, email, message } = body;
 
@@ -15,9 +16,9 @@ export async function POST(request) {
     }
 
     const data = await resend.emails.send({
-      from: 'Ahnaf Portfolio <onboarding@resend.dev>', // Wajib pakai ini untuk free tier
-      to: 'ahnafisa02@gmail.com', // <── SUDAH DIGANTI KE EMAIL ANDA
-      reply_to: email, // Klien membalas ke email yang mereka input
+      from: 'Ahnaf Portfolio <onboarding@resend.dev>', 
+      to: 'ahnafisa02@gmail.com', 
+      reply_to: email, 
       subject: `New Inquiry from ${name} - Portfolio`,
       html: `
         <div style="font-family: sans-serif; color: #111;">
