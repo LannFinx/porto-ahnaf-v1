@@ -51,7 +51,7 @@ const portfolioData = {
       category: "Tools & DevOps",
       icon: "◉",
       items: [
-        { name: "Git / GitHub", level: 90 },
+        { name: "Git / GitHub", level: 80 },
         { name: "Vercel Deployment", level: 85 },
         { name: "Canva / Desain Aset", level: 80 },
         { name: "Project Management", level: 75 },
@@ -97,11 +97,11 @@ const portfolioData = {
   projects: [
     {
       id: "proj-01",
-      title: "RETORIKA DI BALIK BEL SEKOLAH",
-      subtitle: "Visual Novel Game",
+      title: "Remnant of Memory",
+      subtitle: "Roblox Game",
       description:
         "Visual novel interaktif dengan mekanik battle orisinal dan antarmuka dinamis. Merancang seluruh UI/UX dalam lingkungan game engine serta sistem dialog dan narasi.",
-      tags: ["Game Dev", "UI Design", "JavaScript", "Visual Novel"],
+      tags: ["Game Dev", "Storyboard", "Lua Script", "Roblox"],
       accent: "#c8a96e",
       featured: true,
       year: "2024",
@@ -155,8 +155,8 @@ const portfolioData = {
 
   // ── SOCIAL / LINKS ────────────────────────────────────────
   social: [
-    { label: "GitHub", href: "https://github.com/", icon: "GH" },
-    { label: "LinkedIn", href: "https://linkedin.com/", icon: "LI" },
+    { label: "GitHub", href: "https://github.com/LannFinx", icon: "GH" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/m-ahnaf-isa-hammam-lisualla-896887330/", icon: "LI" },
     { label: "Email", href: "mailto:ahnafisa02@gmail.com", icon: "EM" },
   ],
 };

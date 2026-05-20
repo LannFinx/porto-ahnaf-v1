@@ -10,6 +10,7 @@ import Skills           from '@/components/Skills/Skills';
 import Experience       from '@/components/Experience/Experience';
 import Contact          from '@/components/Contact/Contact';
 import GlobalBackground from '@/components/GlobalBackground/GlobalBackground'; 
+import AiTerminal       from '@/components/AiTerminal/AiTerminal'; 
 
 // Komponen Baru Upgrade Ekstrem
 import Preloader        from '@/components/Preloader/Preloader';
@@ -26,10 +27,11 @@ export default function Home() {
   return (
     <>
       {/* Gerbang Masuk Mewah */}
-      {/* <Preloader /> */}
+      <Preloader />
 
       <main className={styles.main}>
         <GlobalBackground />
+        <AiTerminal />
         
         <Navbar />
         <Hero />

@@ -1,7 +1,5 @@
 'use client';
 // components/Contact/Contact.js
-// ─── Grand Finale: Tipografi Interaktif, Live Time, & Magnetic Socials ───
-
 import { useState, useEffect, useRef } from 'react';
 import portfolioData from '@/data/portfolioData';
 import styles from './Contact.module.css';
@@ -40,36 +38,52 @@ const MagneticSocial = ({ href, children }) => {
 
 export default function Contact() {
   const { profile, social } = portfolioData;
-  
-  // State untuk interaksi Copy to Clipboard
-  const [isCopied, setIsCopied] = useState(false);
-  // State untuk Waktu Lokal (WITA)
   const [time, setTime] = useState('');
+  
+  // State untuk Modal & Form
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
 
-  // ─── LOGIKA 1: Live Local Time (WITA - Banjarbaru) ───
+  // Logika: Live Local Time (WITA - Banjarbaru)
   useEffect(() => {
     const updateTime = () => {
-      // Mengambil waktu spesifik zona waktu WITA (Asia/Makassar)
       const options = { timeZone: 'Asia/Makassar', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
       const formatter = new Intl.DateTimeFormat('en-US', options);
       setTime(formatter.format(new Date()));
     };
     
-    updateTime(); // Setel langsung saat render
-    const interval = setInterval(updateTime, 1000); // Update setiap detik
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
 
-  // ─── LOGIKA 2: Click to Copy ───
-  const handleCopyEmail = (e) => {
+  // Logika: Submit API Resend
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigator.clipboard.writeText(profile.email);
-    setIsCopied(true);
-    
-    // Kembalikan teks setelah 3 detik
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 3000);
+    setStatus('loading');
+
+    try {
+      const response = await fetch('/api/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+        // Auto-close modal after 3 seconds on success
+        setTimeout(() => {
+          setIsModalOpen(false);
+          setStatus('idle');
+        }, 3000);
+      } else {
+        setStatus('error');
+      }
+    } catch (error) {
+      setStatus('error');
+    }
   };
 
   return (
@@ -80,27 +94,19 @@ export default function Contact() {
         <div className={styles.ctaWrapper}>
           <div className={styles.topInfo}>
             <p className={styles.subheading}>Mari Berkolaborasi</p>
-            
-            {/* Widget Waktu Lokal yang Elegan */}
             <div className={styles.localTime}>
               <span className={styles.pulseDot}></span>
               <span>Local Time (WITA): {time}</span>
             </div>
           </div>
 
-          {/* Teks Raksasa Click-to-Copy */}
           <button 
-            onClick={handleCopyEmail} 
+            onClick={() => setIsModalOpen(true)} 
             className={styles.bigEmailBtn}
-            title="Click to copy email"
           >
-            {isCopied ? (
-              <span className={styles.copiedText}>Email Copied!</span>
-            ) : (
-              <span className={styles.defaultText}>
-                Get In <em className={styles.italicAksent}>Touch.</em>
-              </span>
-            )}
+            <span className={styles.defaultText}>
+              Get In <em className={styles.italicAksent}>Touch.</em>
+            </span>
           </button>
         </div>
 
@@ -109,7 +115,6 @@ export default function Contact() {
           <div className={styles.copyright}>
             © {new Date().getFullYear()} {profile.fullName}.
           </div>
-          
           <div className={styles.socials}>
             {social.map((soc, idx) => (
               <MagneticSocial key={idx} href={soc.href}>
@@ -118,7 +123,67 @@ export default function Contact() {
             ))}
           </div>
         </div>
+      </div>
 
+      {/* ── CONTACT MODAL (GLASSMORPHISM) ── */}
+      <div className={`${styles.modalOverlay} ${isModalOpen ? styles.showModal : ''}`}>
+        <div className={styles.modalContent}>
+          <button className={styles.closeBtn} onClick={() => setIsModalOpen(false)}>×</button>
+          
+          <div className={styles.modalHeader}>
+            <h3>Kirim Pesan</h3>
+            <p>Tertarik bekerja sama? Isi form di bawah ini.</p>
+          </div>
+
+          {status === 'success' ? (
+            <div className={styles.successState}>
+              <div className={styles.checkIcon}>✓</div>
+              <h4>Pesan Terkirim!</h4>
+              <p>Terima kasih. Saya akan segera membalas email Anda.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className={styles.form}>
+              <div className={styles.inputGroup}>
+                <input 
+                  type="text" 
+                  placeholder="Nama Lengkap" 
+                  required 
+                  disabled={status === 'loading'}
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                />
+              </div>
+              <div className={styles.inputGroup}>
+                <input 
+                  type="email" 
+                  placeholder="Alamat Email" 
+                  required 
+                  disabled={status === 'loading'}
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                />
+              </div>
+              <div className={styles.inputGroup}>
+                <textarea 
+                  placeholder="Ceritakan tentang proyek Anda..." 
+                  rows="4" 
+                  required
+                  disabled={status === 'loading'}
+                  value={formData.message}
+                  onChange={(e) => setFormData({...formData, message: e.target.value})}
+                ></textarea>
+              </div>
+              
+              {status === 'error' && (
+                <p className={styles.errorText}>Gagal mengirim pesan. Silakan coba lagi nanti.</p>
+              )}
+
+              <button type="submit" className={styles.submitBtn} disabled={status === 'loading'}>
+                {status === 'loading' ? <span className={styles.spinner}></span> : 'Kirim Pesan ↗'}
+              </button>
+            </form>
+          )}
+        </div>
       </div>
     </footer>
   );

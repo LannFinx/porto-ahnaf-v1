@@ -10,43 +10,79 @@ export default function Projects() {
   const projectsData = [
     {
       id: "p1",
-      title: "Sistem Informasi INFOUKS",
-      category: "Web Engineering",
-      tech: "PHP · MySQL · Pure CSS",
-      desc: "Perancangan arsitektur database relasional dan validasi form dinamis untuk pengelolaan data terpusat.",
-      image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop",
-      link: "https://github.com/username-anda" 
+      title: "LuxurySneakers",
+      category: "E-Commerce",
+      tech: "Web Development",
+      desc: "Aplikasi berbasis web E-commerce premium yang dirancang untuk kurasi dan penjualan produk high-end dengan pengalaman visual yang mewah.",
+      image: "/luxury.jpg", // Mengambil dari folder public
+      link: "" // Kosongkan jika tidak ada link live
     },
     {
       id: "p2",
-      title: "Project: Forever",
-      category: "Web Engineering", 
-      tech: "Phaser.js · JavaScript",
-      desc: "Implementasi mekanik battle dan perancangan antarmuka visual novel interaktif.",
-      image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop",
-      link: "https://project-forever.vercel.app/"
+      title: "InfoUKS",
+      category: "Health Integration",
+      tech: "Web Engineering",
+      desc: "Integrasi sistem informasi kesehatan siswa dan manajemen rekam medis terpadu ke dalam satu platform web yang responsif dan dinamis.",
+      image: "/infouk.jpg", // Sesuai dengan nama file Anda
+      link: ""
     },
     {
       id: "p3",
+      title: "Spotbanua",
+      category: "Mobile App Design",
+      tech: "UI/UX Design",
+      desc: "Perancangan antarmuka (UI/UX) aplikasi destinasi wisata interaktif untuk mempermudah eksplorasi tempat menarik di Banjarbaru dan wilayah Kalimantan Selatan.",
+      image: "/spotbanua.jpg",
+      link: ""
+    },
+    {
+      id: "p4",
+      title: "Bimbel Smart",
+      category: "Information System",
+      tech: "Web Platform",
+      desc: "Platform sistem informasi manajemen bimbingan belajar cerdas untuk optimalisasi administrasi pendidikan dan monitoring akademik siswa.",
+      image: "/bimbel.png",
+      link: "https://bimbel-smart.neumediradev.my.id/"
+    },
+    {
+      id: "p5",
+      title: "Project: Forever",
+      category: "Creative Web Design",
+      tech: "Front-End Integration",
+      desc: "Eksplorasi antarmuka web interaktif yang menerapkan teknik digital storytelling dengan tata letak editorial asimetris dan animasi berbasis scroll.",
+      image: "/projectforever.png", // Pastikan Anda memasukkan screenshot web ini ke folder public dengan nama ini
+      link: "https://project-forever.vercel.app/"
+    },
+    {
+      id: "p6",
       title: "Block Master",
-      category: "Game Development",
+      category: "Experimental Game Dev",
       tech: "Phaser.js · JavaScript",
-      desc: "Game gabut untuk membujuk sang pacar kesayangan.",
-      image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop", 
+      desc: "Proyek eksperimen game 2D arcade untuk menguji kalkulasi fisika (collision detection), penanganan input real-time, dan state management pada browser.",
+      image: "/blockmaster.png", // Pastikan Anda memasukkan screenshot game ini ke folder public dengan nama ini
       link: "https://game-gabut-lemon.vercel.app/"
     },
+    {
+      id: "p7",
+      title: "Rental Random Platform",
+      category: "Management System",
+      tech: "Laravel · Web Engineering",
+      desc: "Sistem manajemen persewaan berbasis web yang mengimplementasikan sistem autentikasi aman, kontrol akses multi-role, serta perancangan arsitektur database relasional untuk pelacakan inventaris dan riwayat transaksi.",
+      image: "/rental.png", // Ambil screenshot halaman login/dashboard, beri nama rental.jpg, masukkan ke folder public
+      link: "https://rental-randoom.neumediradev.my.id/login"
+    }
   ];
 
   const [activeFilter, setActiveFilter] = useState('All');
   const [clickedCard, setClickedCard] = useState(null);
-  
+
   const [activeImage, setActiveImage] = useState(null);
   const cursorImageRef = useRef(null);
 
   const categories = ['All', ...new Set(projectsData.map(item => item.category))];
-  
-  const filteredProjects = activeFilter === 'All' 
-    ? projectsData 
+
+  const filteredProjects = activeFilter === 'All'
+    ? projectsData
     : projectsData.filter(proj => proj.category === activeFilter);
 
   const handleCardClick = (id) => {
@@ -63,7 +99,7 @@ export default function Projects() {
       if (cursorImageRef.current) {
         const x = e.clientX;
         const y = e.clientY;
-        
+
         cursorImageRef.current.animate({
           left: `${x}px`,
           top: `${y}px`
@@ -77,7 +113,7 @@ export default function Projects() {
   return (
     <section className={styles.projects} id="projects">
       <div className={styles.container}>
-        
+
         <div className={styles.sectionLabel}>
           <span className={styles.labelNum}>03</span>
           <span className={styles.labelText}>Selected Works</span>
@@ -85,7 +121,7 @@ export default function Projects() {
 
         <div className={styles.filterContainer}>
           {categories.map((category, index) => (
-            <button 
+            <button
               key={index}
               onClick={() => setActiveFilter(category)}
               className={`${styles.filterBtn} ${activeFilter === category ? styles.activeFilter : ''}`}
@@ -97,8 +133,8 @@ export default function Projects() {
 
         <div className={styles.grid}>
           {filteredProjects.map((proj) => (
-            <div 
-              className={styles.card} 
+            <div
+              className={styles.card}
               key={proj.id}
               onClick={() => handleCardClick(proj.id)}
               onMouseEnter={() => setActiveImage(proj.image)}
@@ -108,7 +144,7 @@ export default function Projects() {
                 <span className={styles.category}>{proj.category}</span>
                 <span className={styles.tech}>{proj.tech}</span>
               </div>
-              
+
               <h3 className={styles.title}>
                 {proj.link ? (
                   <a href={proj.link} target="_blank" rel="noopener noreferrer" className={styles.titleLink}>
@@ -122,16 +158,16 @@ export default function Projects() {
                   </div>
                 )}
               </h3>
-              
+
               <p className={styles.desc}>{proj.desc}</p>
-              
+
               {/* GAMBAR STATIS MOBILE MENGGUNAKAN NEXT/IMAGE */}
-              <Image 
-                src={proj.image} 
-                alt={proj.title} 
+              <Image
+                src={proj.image}
+                alt={proj.title}
                 width={800} // Resolusi optimal
                 height={500} // Rasio aspek 8:5
-                className={styles.mobileImage} 
+                className={styles.mobileImage}
               />
 
               <div className={styles.accentLine} />
@@ -142,16 +178,16 @@ export default function Projects() {
       </div>
 
       {/* ─── ELEMEN GAMBAR MELAYANG (Khusus Desktop) ─── */}
-      <div 
-        ref={cursorImageRef} 
+      <div
+        ref={cursorImageRef}
         className={`${styles.floatingImageContainer} ${activeImage ? styles.showImage : ''}`}
       >
-        <Image 
-          src={activeImage || projectsData[0].image} 
-          alt="Project Preview" 
+        <Image
+          src={activeImage || projectsData[0].image}
+          alt="Project Preview"
           width={600}  // Render resolusi lebih kecil sedikit agar ringan untuk kursor
           height={400}
-          className={styles.floatingImg} 
+          className={styles.floatingImg}
           priority // Prioritaskan loading untuk gambar pertama agar animasi kursor instan
         />
       </div>

@@ -1,0 +1,161 @@
+/* components/AiTerminal/AiTerminal.module.css */
+
+/* ── TOMBOL TOGGLE ── */
+.toggleBtn {
+  position: fixed;
+  bottom: var(--space-8);
+  right: var(--space-8);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-gold);
+  color: var(--color-gold);
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.toggleBtn:hover {
+  transform: scale(1.1) translateY(-5px);
+  background: rgba(200, 169, 110, 0.1);
+}
+
+.toggleBtn.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+}
+
+/* ── TERMINAL WINDOW ── */
+.terminalWindow {
+  position: fixed;
+  bottom: var(--space-8);
+  right: var(--space-8);
+  width: 380px;
+  max-width: calc(100vw - var(--space-16));
+  height: 500px;
+  max-height: 70vh;
+  background: rgba(15, 15, 15, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  
+  /* Animasi Buka/Tutup */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px) scale(0.95);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.terminalWindow.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* ── HEADER TERMINAL ── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-2);
+  border-bottom: 1px solid var(--color-border);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.1em;
+}
+
+.closeBtn {
+  background: none; border: none; color: var(--color-text-muted);
+  font-size: var(--text-lg); cursor: pointer; line-height: 1;
+}
+.closeBtn:hover { color: var(--color-text-primary); }
+
+/* ── CHAT AREA ── */
+.chatArea {
+  flex: 1;
+  padding: var(--space-4);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.aiMessage, .userMessage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.prefix {
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.aiMessage .prefix { color: var(--color-gold); }
+.userMessage .prefix { color: var(--color-green); }
+
+.text {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.userMessage .text { color: var(--color-text-secondary); }
+
+/* ── INPUT AREA ── */
+.inputArea {
+  display: flex;
+  align-items: center;
+  padding: var(--space-4);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.promptArrow {
+  font-family: var(--font-mono); color: var(--color-green); margin-right: var(--space-2);
+}
+
+.inputField {
+  flex: 1; background: transparent; border: none; outline: none;
+  font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-primary);
+}
+.inputField::placeholder { color: var(--color-text-muted); }
+
+/* ── LOADER ANIMATION ── */
+.loader {
+  display: inline-block;
+  width: 10px; height: 10px;
+  background-color: var(--color-gold);
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* ── RESPONSIVE MOBILE ── */
+@media (max-width: 768px) {
+  .terminalWindow {
+    bottom: 0; right: 0; width: 100vw; height: 60vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+}
