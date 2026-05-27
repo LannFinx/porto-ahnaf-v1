@@ -94,7 +94,7 @@ export default function Projects() {
         en: "A web-based rental management system implementing secure authentication, multi-role access control, and a relational database architecture for inventory and transaction tracking."
       },
       image: "/rental.png", 
-      link: "https://rental-randoom.neumediradev.my.id/login"
+      link: ""
     }
   ];
 
