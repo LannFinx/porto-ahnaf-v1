@@ -11,11 +11,11 @@ export const metadata = {
   openGraph: {
     title: 'Ahnaf Isa — Software Engineer',
     description: 'Lihat karya dan proyek pengembangan web modern saya.',
-    url: 'https://porto-ahnaf-v1.vercel.app/',
+    url: 'https://ahnafisa.vercel.app/',
     siteName: 'Ahnaf Portfolio',
     images: [
       {
-        url: 'https://porto-ahnaf-v1.vercel.app/og-image.png',
+        url: 'https://ahnafisa.vercel.app/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Portfolio Preview',
@@ -28,7 +28,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Ahnaf Isa — Software Engineer',
     description: 'Lihat karya dan proyek pengembangan web modern saya.',
-    images: ['https://porto-ahnaf-v1.vercel.app/og-image.png'],
+    images: ['https://ahnafisa.vercel.app/og-image.png'],
   },
 };
 
