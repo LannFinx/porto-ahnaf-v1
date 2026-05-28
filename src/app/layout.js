@@ -15,7 +15,7 @@ export const metadata = {
     siteName: 'Ahnaf Portfolio',
     images: [
       {
-        url: 'https://ahnafisa.vercel.app/og-image.png ',
+        url: 'https://ahnafisa.vercel.app/og-image.png?v=update1 ',
         width: 1200,
         height: 630,
         alt: 'Portfolio Preview',
